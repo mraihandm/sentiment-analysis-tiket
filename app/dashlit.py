@@ -33,12 +33,6 @@ def date_selector(start_date, end_date,df):
   df_filter = df.loc[((df['date'] >= start_date) & (df['date'] <= end_date))]
   return df_filter
 
-if 'stage' not in st.session_state:
-    st.session_state.stage = 0
-
-def set_state(i):
-    st.session_state.stage = i
-
 svm_model = joblib.load('svm_ready.joblib')
 vectorizer = joblib.load('vectorizer_svm_ready.joblib')
 
@@ -79,7 +73,7 @@ def main():
       dfprep['cleaned'] = dfprep['filtered'].apply(stopstem)
       dfprep['tokens'] = dfprep['cleaned'].apply(word_tokenize_wrapper)
       
-      kamusslang = pd.read_csv("https://github.com/mraihandm/sentiment-analysis-tiket/blob/4ce26427539cfd4920ecfe50256cde5673394d48/app/kamus_slangwords.csv")
+      kamusslang = pd.read_csv("https://raw.githubusercontent.com/mraihandm/sentiment-analysis-tiket/main/app/kamus_slangwords.csv")
       kata_pembakuan_dict = {}
       for index, row in kamusslang.iterrows():
         if row[0] not in kata_pembakuan_dict:
