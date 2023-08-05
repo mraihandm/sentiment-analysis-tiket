@@ -73,7 +73,7 @@ def main():
       dfprep['cleaned'] = dfprep['filtered'].apply(stopstem)
       dfprep['tokens'] = dfprep['cleaned'].apply(word_tokenize_wrapper)
       
-      kamusslang = pd.read_csv("https://raw.githubusercontent.com/mraihandm/sentiment-analysis-tiket/main/app/kamus_slangwords.csv")
+      kamusslang = pd.read_csv("app/kamus_slangwords.csv")
       kata_pembakuan_dict = {}
       for index, row in kamusslang.iterrows():
         if row[0] not in kata_pembakuan_dict:
