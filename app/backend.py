@@ -34,7 +34,7 @@ def text_filtering(text):
 
 # %%
 def stopstem(text):
-    with open("kamus_stopwords_v2.txt") as kamus:
+    with open("./kamus/kamus_stopwords_v2.txt") as kamus:
         word = kamus.readlines()
         list_stopword = [line.replace('\n',"") for line in word]
     dictionary = ArrayDictionary(list_stopword)
@@ -52,7 +52,7 @@ def word_tokenize_wrapper(text):
 
 # %%
 #pengubahan kata slang
-kamusslang = pd.read_csv("kamus_slangwords.csv")
+kamusslang = pd.read_csv("./kamus/kamus_slangwords.csv")
 kata_pembakuan_dict = {}
 
 for index, row in kamusslang.iterrows():
@@ -74,7 +74,7 @@ def join_token(document):
 # %%
 #penghapusan stopwords akhir
 def stop(text):
-    with open("kamus_stopwords_v2.txt") as kamus:
+    with open("./kamus/kamus_stopwords_v2.txt") as kamus:
         word = kamus.readlines()
         list_stopword = [line.replace('\n',"") for line in word]
     dictionary = ArrayDictionary(list_stopword)
