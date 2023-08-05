@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import joblib
+nltk.download('punkt')
 
 from google_play_scraper import Sort, reviews_all
 
