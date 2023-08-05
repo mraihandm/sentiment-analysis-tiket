@@ -34,7 +34,7 @@ def text_filtering(text):
 
 # %%
 def stopstem(text):
-    with open("https://github.com/mraihandm/sentiment-analysis-tiket/blob/0dc6050e566abbbdbf073bade2628e42af2a792b/app/kamus_stopwords_v2.txt") as kamus:
+    with open("https://raw.githubusercontent.com/mraihandm/sentiment-analysis-tiket/main/app/kamus_stopwords_v2.txt") as kamus:
         word = kamus.readlines()
         list_stopword = [line.replace('\n',"") for line in word]
     dictionary = ArrayDictionary(list_stopword)
@@ -52,7 +52,7 @@ def word_tokenize_wrapper(text):
 
 # %%
 #pengubahan kata slang
-kamusslang = pd.read_csv("https://github.com/mraihandm/sentiment-analysis-tiket/blob/4ce26427539cfd4920ecfe50256cde5673394d48/app/kamus_slangwords.csv")
+kamusslang = pd.read_csv("https://raw.githubusercontent.com/mraihandm/sentiment-analysis-tiket/main/app/kamus_slangwords.csv")
 kata_pembakuan_dict = {}
 
 for index, row in kamusslang.iterrows():
@@ -74,7 +74,7 @@ def join_token(document):
 # %%
 #penghapusan stopwords akhir
 def stop(text):
-    with open("https://github.com/mraihandm/sentiment-analysis-tiket/blob/0dc6050e566abbbdbf073bade2628e42af2a792b/app/kamus_stopwords_v2.txt") as kamus:
+    with open("https://raw.githubusercontent.com/mraihandm/sentiment-analysis-tiket/main/app/kamus_stopwords_v2.txt") as kamus:
         word = kamus.readlines()
         list_stopword = [line.replace('\n',"") for line in word]
     dictionary = ArrayDictionary(list_stopword)
