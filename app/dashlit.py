@@ -62,6 +62,8 @@ def main():
       st.markdown('**Data hasil scraping**')
       st.dataframe(df_filter)
 
+      st.write("Jumlah data: ", len(df_filter))
+
       fig1 = px.histogram(df_filter, x='score', title='Sebaran rating')
       fig1.update_layout(showlegend=False)
       fig1.update_layout(bargap=0.1)
