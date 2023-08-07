@@ -37,8 +37,8 @@ def date_selector(start_date, end_date,df):
   return df_filter
 
 
-svm_model = joblib.load('svm_ready.joblib')
-vectorizer = joblib.load('vectorizer_svm_ready.joblib')
+svm_model = joblib.load('app/svm_ready.joblib')
+vectorizer = joblib.load('app/vectorizer_svm_ready.joblib')
 
 
 def main():
