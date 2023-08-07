@@ -43,7 +43,7 @@ vectorizer = joblib.load('app/vectorizer_svm_ready.joblib')
 
 def main():
     st.title("Aplikasi Analisis Sentimen")
-    st.markdown("Aplikasi ini dibuat untuk analisis sentimen")
+    st.markdown("Aplikasi ini dibuat untuk menganalisis sentimen ulasan pengguna aplikasi tiket.com")
 
     st.subheader("Scrap Data Ulasan dari Google Play Store")
 
