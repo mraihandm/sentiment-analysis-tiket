@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import joblib
+
 import nltk
 nltk.download('punkt')
 
@@ -35,15 +36,12 @@ def date_selector(start_date, end_date,df):
   df_filter = df.loc[((df['date'] >= start_date) & (df['date'] <= end_date))]
   return df_filter
 
-svm_model = joblib.load('app/svm_ready.joblib')
-vectorizer = joblib.load('app/vectorizer_svm_ready.joblib')
+
+svm_model = joblib.load('svm_ready.joblib')
+vectorizer = joblib.load('vectorizer_svm_ready.joblib')
 
 
 def main():
-  activities = ["Main Page", "Tentang Kami"]
-  choice = st.sidebar.selectbox("Choice", activities)
-
-  if choice == 'Main Page':
     st.title("Aplikasi Analisis Sentimen")
     st.markdown("Aplikasi ini dibuat untuk analisis sentimen")
 
@@ -75,7 +73,7 @@ def main():
       dfprep['cleaned'] = dfprep['filtered'].apply(stopstem)
       dfprep['tokens'] = dfprep['cleaned'].apply(word_tokenize_wrapper)
       
-      kamusslang = pd.read_csv("app/kamus_slangwords.csv")
+      kamusslang = pd.read_csv("app\kamus_slangwords.csv")
       kata_pembakuan_dict = {}
       for index, row in kamusslang.iterrows():
         if row[0] not in kata_pembakuan_dict:
@@ -95,7 +93,9 @@ def main():
       text_vector = vectorizer.transform(dfprep['pembakuan_bersih'].apply(lambda x: str(x)))
       dfprep['predicted_sentiment'] = svm_model.predict(text_vector)
       dfresult = dfprep[['content', 'pembakuan_bersih','predicted_sentiment','temp_token']]
-      st.dataframe(dfresult[['content', 'pembakuan_bersih','predicted_sentiment']])
+      dfresult_view = dfresult[['content','pembakuan_bersih','predicted_sentiment']]
+      dfresult_view.columns = ['Ulasan (Raw)', 'Ulasan (Preprocessed)', 'predicted_sentiment']
+      st.dataframe(dfresult_view)
 
       dfresultpos = dfresult[dfresult['predicted_sentiment'] == 1]
       dfresultneg = dfresult[dfresult['predicted_sentiment'] == 0]
@@ -113,7 +113,6 @@ def main():
       dffreqneg = hitung_kata(dfresultneg)
       dffreqnegres = dffreqneg.reset_index()
       dffreqnegtop = dffreqnegres.head(10)
-    
 
       #plot count words positive
       fig2pos = go.Figure()
@@ -130,7 +129,7 @@ def main():
               bargap=0.1
             )
       fig2pos.update_yaxes(autorange="reversed")
-      st.plotly_chart(fig2pos)
+      
 
       #plot count words negative
       fig2neg = go.Figure()
@@ -147,7 +146,7 @@ def main():
               bargap=0.1
             )
       fig2neg.update_yaxes(autorange="reversed")
-      st.plotly_chart(fig2neg)
+      
 
       #Wordcloud
       reviews_text = ' '.join(dfprep['pembakuan_bersih'].tolist())
@@ -157,7 +156,7 @@ def main():
       plt.imshow(wordcloud, interpolation='bilinear')
       plt.title("Wordcloud")
       plt.axis('off')
-      st.pyplot(plt)
+      
 
       #Analisis Ngrams
       dfprep['bigrams'] = dfprep['temp_token'].apply(ngrams,n=2)
@@ -166,7 +165,7 @@ def main():
 
       fig3 = px.bar(df3, x='token', y='freq', title='Analisis ngrams')
       fig3.update_xaxes(tickangle=-90)
-      st.plotly_chart(fig3)
+      
 
       #Analisis Ngrams positif
       dfresultpos['bigrams'] = dfresultpos['temp_token'].apply(ngrams, n=2)
@@ -176,7 +175,7 @@ def main():
       fig4 = px.bar(dfngrampos2, x='token', y='freq', title = 'Analisis Ngrams Sentimen Positif')
       fig4.update_xaxes(tickangle =-90)
       fig4.update_traces(marker_color = '#007AFF')
-      st.plotly_chart(fig4)
+      
 
       #Analisis Ngrams negatif
       dfresultneg['bigrams'] = dfresultneg['temp_token'].apply(ngrams, n=2)
@@ -186,15 +185,23 @@ def main():
       fig5 = px.bar(dfngramneg2, x='token', y='freq', title = 'Analisis Ngrams Sentimen Negatif')
       fig5.update_xaxes(tickangle=-90)
       fig5.update_traces(marker_color = '#EE4B2B')
-      st.plotly_chart(fig5)
+      
 
       positive_proportion = dfresult['predicted_sentiment'].mean() * 100
-
       st.subheader('Summary')
-      col1, col2, col3 = st.columns(3)
+      col1, col2, col3, col4 = st.columns(4)
       col1.metric("Rata-rata rating", round(df_filter.score.mean(),2))
       col2.metric("Kata Teratas", dffreqs['token'][0])
-      col3.metric("Proporsi Sentimen Positif", f"{positive_proportion:.2f}%")
+      col3.metric("Ngrams Teratas", df3['token'][0])
+      col4.metric("Proporsi Sentimen Positif", f"{positive_proportion:.2f}%")
+
+
+      st.plotly_chart(fig2pos)
+      st.plotly_chart(fig2neg)
+      st.pyplot(plt)
+      st.plotly_chart(fig3)
+      st.plotly_chart(fig4)
+      st.plotly_chart(fig5)
 
       st.markdown('**Download Data**')
       col4, col5 = st.columns(2)
@@ -206,13 +213,6 @@ def main():
         st.write("Download Data Analisis Sentimen")
         st.download_button(label = "Download", data=convertdf_tocsv(dfresult), file_name = 'dfresult.csv', mime = 'text/csv')
       
-
-
-
-  elif choice == 'Tentang Kami':
-    st.title("Tentang Kami")
-    st.markdown("Terima kasih telah menggunakan aplikasi ini.")
-    st.markdown("Anda menggunakan aplikasi sentimen analisis versi beta I")
 
 
 if __name__ == '__main__':
