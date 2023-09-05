@@ -151,13 +151,23 @@ def main():
       
 
       #Wordcloud
-      reviews_text = ' '.join(dfprep['pembakuan_bersih'].tolist())
-      wordcloud = WordCloud(width=800, height=400, background_color='white').generate(reviews_text)
+      freq_df_wordcloud = freq_df.reset_index()
 
+      # Konversi freq_df_wordcloud menjadi format yang sesuai
+      wordcloud_data = {row['token']: row['freq'] for index, row in freq_df_wordcloud.iterrows()}
+      
+      # Buat objek WordCloud
+      wc = WordCloud(width=800, height=400, background_color='white')
+      
+      # Generate WordCloud
+      wc.generate_from_frequencies(wordcloud_data)
+      
+      # Tampilkan WordCloud menggunakan matplotlib
       plt.figure(figsize=(10, 5))
-      plt.imshow(wordcloud, interpolation='bilinear')
+      plt.imshow(wc, interpolation='bilinear')
       plt.title("Wordcloud")
       plt.axis('off')
+      plt.show()
       
 
       #Analisis Ngrams
